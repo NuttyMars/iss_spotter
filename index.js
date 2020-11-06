@@ -1,28 +1,32 @@
-const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes } = require('./iss');
+const { nextISSTimesForMyLocation } = require('./iss');
 
-// fetchMyIP((error, ip) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
+nextISSTimesForMyLocation((error, passTimes) => {
+  if (error) {
+    return console.log("It didn't work!", error);
+  }
 
-//   console.log('It worked! Returned IP:' , ip);
-// });
+  for (const obj of passTimes) {
+    const newDate = new Date(obj.risetime * 1000);
 
-// fetchCoordsByIP('184.162.209.71', (error, data) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
+    //get weekday
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const weekday = days[newDate.getDay() - 1];
+    
+    //get month name
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const month = months[newDate.getMonth()];
 
-//   console.log('It worked! Returned coords:' , data);
-// });
+    //the .toLocaleString method forces numbers to show 2 digits/appends 0
+    const day = newDate.getDate().toLocaleString('en-us', {minimumIntegerDigits: 2});
 
-// fetchISSFlyOverTimes({ lat: 45.5059, lon: -73.631 }, (error, data) => {
-//   if (error) {
-//     console.log("It didn't work!" , error);
-//     return;
-//   }
+    const year = newDate.getFullYear();
+    const hour = newDate.getHours().toLocaleString('en-us', {minimumIntegerDigits: 2});
+    const min = newDate.getMinutes().toLocaleString('en-us', {minimumIntegerDigits: 2});
+    const sec = newDate.getSeconds().toLocaleString('en-us', {minimumIntegerDigits: 2});
 
-//   console.log('It worked! Returned :' , data);
-// });
+    const time = `${weekday} ${month} ${day} ${year} ${hour}:${min}:${sec}`;
+
+    console.log(`Next passt at ${time} UTC for ${obj.duration} seconds!`);
+    
+  }
+});
