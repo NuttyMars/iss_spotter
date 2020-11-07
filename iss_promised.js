@@ -9,7 +9,7 @@ const fetchMyIP = function() {
   return request('https://api.ipify.org?format=json');
 };
 
-/* 
+/*
  * Makes a request to ip-api.com using the provided IP address, to get its geographical information (latitude/longitude)
  * Input: JSON string containing the IP address
  * Returns: Promise of request for lat/lon
@@ -36,17 +36,12 @@ const fetchISSFlyOverTimes = function(body) {
 
 const nextISSTimesForMyLocation = function() {
   return fetchMyIP()
-  .then(fetchCoordsByIP)
-  .then(fetchISSFlyOverTimes)
-  .then(data => {
-    const flyovers = JSON.parse(data).response;
-    console.log('response :', flyovers);
-  })
-
-
-
+    .then(fetchCoordsByIP)
+    .then(fetchISSFlyOverTimes)
+    .then(data => {
+      const flyovers = JSON.parse(data).response;
+      return flyovers;
+    });
 };
-
-//90 min
 
 module.exports = { nextISSTimesForMyLocation };
